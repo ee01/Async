@@ -2,8 +2,6 @@
 namespace Async\includes;
 
 class setting {
-	static public $option_name = ASYNC_PLUGIN_OPTIONNAME;
-	static public $Awechat_option_name = AWECHAT_PLUGIN_OPTIONNAME;
 
 	public function __construct() {
         add_action( 'admin_init', array( $this, 'settings_init' ));
@@ -14,21 +12,22 @@ class setting {
 	}
 
 	static function Activation() {
-		$options = get_option( self::$option_name );
+		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		if ($options) return false;
 		$options = array(
 			'article_cover_image' => ASYNC_DEFAULT_ARTICLE_IMAGE,
 		);
-		$Awechat_options = get_option( self::$Awechat_option_name );
+		$Awechat_option_name = defined(AWECHAT_PLUGIN_OPTIONNAME) ? AWECHAT_PLUGIN_OPTIONNAME : 'Awechat_setting';
+		$Awechat_options = get_option( $Awechat_option_name );
 		if ($Awechat_options) {
 			$options['article_cover_image'] = $Awechat_options['article_cover_image'];
 			$options['title_prefix'] = $Awechat_options['title_prefix'];
 		}
-		update_option( self::$option_name, $options );
+		update_option( ASYNC_PLUGIN_OPTIONNAME, $options );
 	}
 	
     public function settings_init(){
-		register_setting( self::$option_name, self::$option_name );
+		register_setting( ASYNC_PLUGIN_OPTIONNAME, ASYNC_PLUGIN_OPTIONNAME );
 	}
 
     public function add_plugin_page(){
@@ -48,7 +47,7 @@ class setting {
     }
     public function create_admin_page(){
         // Set class property
-		$options = get_option( self::$option_name );
+		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$interface_url = $options['token']!=''?home_url().'/?'.$options['token']:'none';
 		wp_enqueue_media();
 		wp_register_script('Async-custom-upload', ASYNC_PLUGIN_URL.'/assets/media_upload.js', array('jquery','media-upload','thickbox'),"2.0");
@@ -57,7 +56,7 @@ class setting {
 		<div class="wrap">
 			<h2><?php _e('A Synchronization','Async')?></h2>
 			<form action="options.php" method="POST">
-				<?php settings_fields( self::$option_name );?>
+				<?php settings_fields( ASYNC_PLUGIN_OPTIONNAME );?>
 				<hr>
 				<h2><?php _e('Ximalaya Account Settings','Async')?></h2>
 				<table class="form-table">
@@ -66,7 +65,7 @@ class setting {
 						<td>
 							<input type="text"
 								size="30"
-								name="<?php echo self::$option_name ;?>[ximalaya][phone]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME ;?>[ximalaya][phone]"
 								value="<?php echo $options['ximalaya']['phone'];?>"
 								class="regular-text"/>
 							<p class="description">
@@ -79,7 +78,7 @@ class setting {
 						<td>
 							<input type="password"
 								size="30"
-								name="<?php echo self::$option_name ;?>[ximalaya][password]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME ;?>[ximalaya][password]"
 								value="<?php echo $options['ximalaya']['password'];?>"
 								class="regular-password"/>
 						</td>
@@ -89,7 +88,7 @@ class setting {
 						<td>
 							<input type="text"
 								size="30"
-								name="<?php echo self::$option_name ;?>[ximalaya][album_id]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME ;?>[ximalaya][album_id]"
 								value="<?php echo $options['ximalaya']['album_id'];?>"
 								class="regular-text"/>
 							<p class="description">
@@ -101,7 +100,7 @@ class setting {
 						<th scope="row"><label><?php _e('Enable sync from XML-RPC','Async')?></label></th>
 						<td>
 							<input type="checkbox"
-								name="<?php echo self::$option_name ;?>[xmlrpc_sync_ximalaya]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME ;?>[xmlrpc_sync_ximalaya]"
 								value="1"
 								<?php echo $options['xmlrpc_sync_ximalaya']?'checked':'';?>
 								class="regular-checkbox"/>
@@ -118,7 +117,7 @@ class setting {
 						<td>
 							<input type="text"
 								size="30"
-								name="<?php echo self::$option_name ;?>[title_prefix]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME ;?>[title_prefix]"
 								value="<?php echo $options['title_prefix'];?>"
 								class="regular-text"/>
 							<p class="description">
@@ -137,7 +136,7 @@ class setting {
 						</div>
 						<input type="hidden"
 								value="<?php echo $options['article_cover_image']; ?>"
-								name="<?php echo self::$option_name; ?>[article_cover_image]"
+								name="<?php echo ASYNC_PLUGIN_OPTIONNAME; ?>[article_cover_image]"
 								rel="img-input" class="img-input large-text"/>
 						<button class='media_upload_button button'>
 							<?php _e('Upload', 'Async'); ?>
@@ -161,7 +160,7 @@ class setting {
         add_meta_box('Async-meta-box', __('A Sync', 'Async'), [$this, 'async_meta_box'], 'post', 'side', 'high');
 	}
     public function async_meta_box() {
-		$options = get_option( self::$option_name );
+		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
     ?>
 		<h4 style="margin-bottom:5px"><?php _e('Ximalaya Sync', 'Async'); ?></h4>
 		<hr style="margin-top:0" />
