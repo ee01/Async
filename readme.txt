@@ -48,7 +48,7 @@ Yes. Please install via git clone to the plugin folder above instead of uploadin
 
 == Upgrade Notice ==
 
-Nothing.
+Nothing
 
 == Arbitrary section ==
 
