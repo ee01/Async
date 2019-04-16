@@ -1,0 +1,211 @@
+<?php
+namespace Async\includes;
+
+class setting {
+	static public $option_name = ASYNC_PLUGIN_OPTIONNAME;
+	static public $Awechat_option_name = AWECHAT_PLUGIN_OPTIONNAME;
+
+	public function __construct() {
+        add_action( 'admin_init', array( $this, 'settings_init' ));
+        add_action( 'admin_menu', array( $this, 'add_plugin_page' ));
+        add_action( 'admin_menu', array( $this, 'create_wechat_box' ), 11);
+		add_action( 'manage_post_posts_columns', array( $this, 'posts_add_column' ), 11 );
+		add_action( 'manage_post_posts_custom_column', array( $this, 'posts_render_column' ), 11, 2 );
+	}
+
+	static function Activation() {
+		$options = get_option( self::$option_name );
+		if ($options) return false;
+		$options = array(
+			'article_cover_image' => ASYNC_DEFAULT_ARTICLE_IMAGE,
+		);
+		$Awechat_options = get_option( self::$Awechat_option_name );
+		if ($Awechat_options) {
+			$options['article_cover_image'] = $Awechat_options['article_cover_image'];
+			$options['title_prefix'] = $Awechat_options['title_prefix'];
+		}
+		update_option( self::$option_name, $options );
+	}
+	
+    public function settings_init(){
+		register_setting( self::$option_name, self::$option_name );
+	}
+
+    public function add_plugin_page(){
+        // This page will be under "Settings"
+        $page_title=__('Async Settings', 'Async');
+        $menu_title=__('Async Settings', 'Async');
+        $capability='manage_options';
+        $menu_slug='Async_setting';
+        
+        add_options_page(
+        	$page_title,
+        	$menu_title,
+        	$capability,
+        	$menu_slug,
+        	array( $this, 'create_admin_page' )
+        );
+    }
+    public function create_admin_page(){
+        // Set class property
+		$options = get_option( self::$option_name );
+		$interface_url = $options['token']!=''?home_url().'/?'.$options['token']:'none';
+		wp_enqueue_media();
+		wp_register_script('Async-custom-upload', ASYNC_PLUGIN_URL.'/assets/media_upload.js', array('jquery','media-upload','thickbox'),"2.0");
+		wp_enqueue_script('Async-custom-upload');
+	?>
+		<div class="wrap">
+			<h2><?php _e('A Synchronization','Async')?></h2>
+			<form action="options.php" method="POST">
+				<?php settings_fields( self::$option_name );?>
+				<hr>
+				<h2><?php _e('Ximalaya Account Settings','Async')?></h2>
+				<table class="form-table">
+					<tr valign="top">
+						<th scope="row"><label>Phone</label></th>
+						<td>
+							<input type="text"
+								size="30"
+								name="<?php echo self::$option_name ;?>[ximalaya][phone]"
+								value="<?php echo $options['ximalaya']['phone'];?>"
+								class="regular-text"/>
+							<p class="description">
+								<?php _e('Register podcaster on Ximalaya: ','Async')?><a href="http://studio.ximalaya.com/" target="_blank">http://studio.ximalaya.com/</a>
+							</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label>Password</label></th>
+						<td>
+							<input type="password"
+								size="30"
+								name="<?php echo self::$option_name ;?>[ximalaya][password]"
+								value="<?php echo $options['ximalaya']['password'];?>"
+								class="regular-password"/>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label>Album ID</label></th>
+						<td>
+							<input type="text"
+								size="30"
+								name="<?php echo self::$option_name ;?>[ximalaya][album_id]"
+								value="<?php echo $options['ximalaya']['album_id'];?>"
+								class="regular-text"/>
+							<p class="description">
+								<?php _e('Upload post audio to this album.','Async')?>
+							</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row"><label><?php _e('Enable sync from XML-RPC','Async')?></label></th>
+						<td>
+							<input type="checkbox"
+								name="<?php echo self::$option_name ;?>[xmlrpc_sync_ximalaya]"
+								value="1"
+								<?php echo $options['xmlrpc_sync_ximalaya']?'checked':'';?>
+								class="regular-checkbox"/>
+							<p class="description">
+								<?php _e('Sync up to Ximalaya automatically when using destop app to write article.','Async')?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<h2><?php _e('Sync Up Settings','Async')?></h2>
+				<table class="form-table">
+					<tr valign="top">
+						<th scope="row"><label><?php _e('Title Prefix','Async')?></label></th>
+						<td>
+							<input type="text"
+								size="30"
+								name="<?php echo self::$option_name ;?>[title_prefix]"
+								value="<?php echo $options['title_prefix'];?>"
+								class="regular-text"/>
+							<p class="description">
+								<?php _e('Add to synchronized article title automatically.','Async')?>
+							</p>
+						</td>
+					</tr>
+					<!-- Cover Image-->
+					<tr valign="top">
+						<th scope="row">
+							<label><?php _e('Default Cover', 'Async'); ?></label>
+						</th>
+						<td>
+						<div class="preview-box large">
+							<img src="<?php echo $options['article_cover_image']; ?>" style="max-width:500px" />
+						</div>
+						<input type="hidden"
+								value="<?php echo $options['article_cover_image']; ?>"
+								name="<?php echo self::$option_name; ?>[article_cover_image]"
+								rel="img-input" class="img-input large-text"/>
+						<button class='media_upload_button button'>
+							<?php _e('Upload', 'Async'); ?>
+						</button>
+						<button class='media_delete_button button'>
+							<?php _e('Delete', 'Async'); ?>
+						</button>
+						</td>
+					</tr>
+				</table>
+
+				<?php submit_button(); ?>
+			</form>
+		</div>
+	<?php
+	}
+	
+	public function create_wechat_box() {
+        // $post_types = array_keys(get_post_types());
+        remove_meta_box('Awechat-meta-box', 'post', 'side');
+        add_meta_box('Async-meta-box', __('A Sync', 'Async'), [$this, 'async_meta_box'], 'post', 'side', 'high');
+	}
+    public function async_meta_box() {
+		$options = get_option( self::$option_name );
+    ?>
+		<h4 style="margin-bottom:5px"><?php _e('Ximalaya Sync', 'Async'); ?></h4>
+		<hr style="margin-top:0" />
+        <p>
+            <input type="checkbox" name="ximalaya_sync" id="ximalaya_sync" <?php if ($options['ximalaya']['phone']&&$options['ximalaya']['password']) echo 'checked';else echo 'disabled'; ?>/><label for="ximalaya_sync"><?php _e('Sync Ximalaya', 'Async') ?></label>
+            <a href="/wp-admin/options-general.php?page=Async_setting" style="float: right;"><span aria-hidden="true"><?php _e('Help', 'Async') ?></span></a>
+        </p>
+		<?php if (is_plugin_active('Awechat/Awechat.php')) {
+			require_once AWECHAT_PLUGIN_DIR . 'includes/setting.php'; ?>
+			<h4 style="margin-bottom:5px"><?php _e('Wechat OA Sync', 'Async'); ?></h4>
+			<hr style="margin-top:0" />
+		<?php \Awechat_setting::wechat_meta_box(); } ?>
+    <?php
+	}
+
+	public function posts_add_column($post_columns) {
+		unset($post_columns['Awechat']);
+		$post_columns['Async'] = __( 'Sync', 'Async' );
+		return $post_columns;
+	}
+	public function posts_render_column($column_name, $post_ID) {
+		if ( $column_name == 'Async') {
+			date_default_timezone_set('PRC');
+			if (is_plugin_active('Awechat/Awechat.php')) {
+				require_once AWECHAT_PLUGIN_DIR . 'includes/setting.php';
+				\Awechat_setting::posts_render_column('Awechat', $post_ID);
+			}
+			$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
+			$ximalaya_article_id = get_post_meta( $post_ID, '_ximalaya_track_id', true );
+			$ximalaya_article_url = 'https://www.ximalaya.com/keji/' . ($options['ximalaya']['album_id']?$options['ximalaya']['album_id']:0) . '/' . $ximalaya_article_id;
+			if (!$ximalaya_article_id) $ximalaya_article_url = 'javascript:;';
+			$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
+			$icon_titles = array();
+			if (is_array($ximalaya_sync_log) && count($ximalaya_sync_log) > 0) {
+				$is_sync_successful = $ximalaya_sync_log[count($ximalaya_sync_log)-1]['ret'] != 1;
+				if (!$is_sync_successful) $icon_bg_position = 'background-position:24px 0;';
+				for ($i=count($ximalaya_sync_log)-1; $i >= 0; $i--) { 
+					if (count($ximalaya_sync_log) - $i >= 5) {array_push($icon_titles, '...'); break;}
+					$is_sync_successful = !(array_key_exists('errcode', $ximalaya_sync_log[$i]) && $ximalaya_sync_log[$i]['ret'] != 1);
+					array_push($icon_titles, date('Y-m-d H:i:s', $ximalaya_sync_log[$i]['date']) . ': ' . ($is_sync_successful ? __('Sync Successfully!', 'Async') :  __('Sync Failed!', 'Async').$ximalaya_sync_log[$i]['ret'].'-'.$ximalaya_sync_log[$i]['msg']) );
+				}
+			}
+			if (!$ximalaya_article_id) $icon_bg_position .= 'filter:grayscale(100%);';
+			echo '<a href="' . $ximalaya_article_url . '" title="' . join("\n",$icon_titles) . '" style="display:inline-block;margin:10px 5px;width:24px;height:25px;background-size:48px 25px;background-image:url(' . ASYNC_PLUGIN_URL.'/assets/ximalaya_icon.png' . ');' . $icon_bg_position . '" target="_blank" /></a>';
+		}
+	}
+}

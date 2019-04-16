@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: A Synchronization\n"
+"POT-Creation-Date: 2019-04-15 22:23+0800\n"
+"PO-Revision-Date: 2019-04-15 22:32+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: Async.php\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: Async.php:54
+msgid "Reset"
+msgstr "重置配置"
+
+#: Async.php:56
+msgid "Reset to default setting?"
+msgstr "确定删除现有配置并重置为默认值？"
+
+#: Async.php:60
+msgid "Reset Successfully!"
+msgstr "重置成功"
+
+#: includes/setting.php:36 includes/setting.php:37
+msgid "Async Settings"
+msgstr "一键同步"
+
+#. Plugin Name of the plugin/theme
+#: includes/setting.php:58
+msgid "A Synchronization"
+msgstr "A Synchronization (一键同步)"
+
+#: includes/setting.php:62
+msgid "Ximalaya Account Settings"
+msgstr "喜马拉雅账号配置"
+
+#: includes/setting.php:73
+msgid "Register podcaster on Ximalaya: "
+msgstr "立即注册为喜马拉雅的主播："
+
+#: includes/setting.php:96
+msgid "Upload post audio to this album."
+msgstr "将会上传文章的音频到这个专辑。"
+
+#: includes/setting.php:101
+msgid "Enable sync from XML-RPC"
+msgstr "开启XML-RPC同步喜马拉雅"
+
+#: includes/setting.php:109
+msgid ""
+"Sync up to Ximalaya automatically when using destop app to write article."
+msgstr "当使用客户端写博客的时候，自动同步音频到喜马拉雅。"
+
+#: includes/setting.php:114
+msgid "Sync Up Settings"
+msgstr "文章同步"
+
+#: includes/setting.php:117
+msgid "Title Prefix"
+msgstr "标题前缀"
+
+#: includes/setting.php:125
+msgid "Add to synchronized article title automatically."
+msgstr "自动添加前缀到喜马拉雅音频标题"
+
+#: includes/setting.php:132
+msgid "Default Cover"
+msgstr "默认封面图"
+
+#: includes/setting.php:143
+msgid "Upload"
+msgstr "上传"
+
+#: includes/setting.php:146
+msgid "Delete"
+msgstr "删除"
+
+#: includes/setting.php:161
+msgid "A Sync"
+msgstr "一键同步"
+
+#: includes/setting.php:166
+msgid "Ximalaya Sync"
+msgstr "喜马拉雅"
+
+#: includes/setting.php:169
+msgid "Sync Ximalaya"
+msgstr "同步音频到喜马拉雅"
+
+#: includes/setting.php:170
+msgid "Help"
+msgstr "帮助"
+
+#: includes/setting.php:174
+msgid "Wechat OA Sync"
+msgstr "微信公众号"
+
+#: includes/setting.php:182
+msgid "Sync"
+msgstr "同步到"
+
+#: includes/setting.php:204
+msgid "Sync Successfully!"
+msgstr "同步成功！"
+
+#: includes/setting.php:204
+msgid "Sync Failed!"
+msgstr "同步失败！"
+
+#. Plugin URI of the plugin/theme
+msgid "http://IT.eexx.me/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Synchronize articles or audios to other platforms."
+msgstr "一键同步：同步发布博客文章、音频等数据到其他平台。"
+
+#. Author of the plugin/theme
+msgid "Esone"
+msgstr "E神"
+
+#. Author URI of the plugin/theme
+msgid "http://IT.eexx.me"
+msgstr ""
