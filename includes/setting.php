@@ -62,7 +62,7 @@ class setting {
 				<h2><?php _e('Ximalaya Account Settings','Async')?></h2>
 				<table class="form-table">
 					<tr valign="top">
-						<th scope="row"><label>Phone</label></th>
+						<th scope="row"><label><?php _e('Phone','Async')?></label></th>
 						<td>
 							<input type="text"
 								size="30"
@@ -75,7 +75,7 @@ class setting {
 						</td>
 					</tr>
 					<tr valign="top">
-						<th scope="row"><label>Password</label></th>
+						<th scope="row"><label><?php _e('Password','Async')?></label></th>
 						<td>
 							<input type="password"
 								size="30"
@@ -85,7 +85,7 @@ class setting {
 						</td>
 					</tr>
 					<tr valign="top">
-						<th scope="row"><label>Album ID</label></th>
+						<th scope="row"><label><?php _e('Album ID','Async')?></label></th>
 						<td>
 							<input type="text"
 								size="30"
