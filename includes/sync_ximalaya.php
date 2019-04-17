@@ -29,12 +29,12 @@ DX63+Ecil2JR9klVawIDAQAB
 	public function sync($post_ID, $post, $medias = array()) {
 		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$this->userinfo = $this->get_user_info();
-		$this->uid = $this->userinfo['uid'];
 		if (!$this->userinfo) {
 			$token = $this->get_login_token();
 			$password_encrypted = $this->encrypt_password($this->password, $token);
 			$this->uid = $this->login($password_encrypted);
 		}
+		if (!$this->uid) $this->uid = $this->userinfo['uid'];
 		foreach ($medias as $media) {
 			$ximalaya_track_id = get_post_meta( $post_ID, '_ximalaya_track_id', true );
 			if ($ximalaya_track_id) $ximalaya_track = $this->get_track_info($ximalaya_track_id, $options['ximalaya']['album_id']);
@@ -43,7 +43,6 @@ DX63+Ecil2JR9klVawIDAQAB
 				$track_result = $this->update_track($options['ximalaya']['album_id'], $ximalaya_track_id, $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content, get_the_author_meta('display_name', $post->post_author));
 			} else {
 				$file_result = $this->upload($media['path']);
-				// print_r($file_result);exit;
 				$track_result = $this->create_track($options['ximalaya']['album_id'], $file_result['callbackData']['fileId'], $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content);
 				if ($track_result && $track_result['redirect_to']) {
 					$track_id = $this->get_track_id_by_title($options['title_prefix'].$post->post_title);
@@ -52,12 +51,7 @@ DX63+Ecil2JR9klVawIDAQAB
 			}
 			break;	// support 1 audio per post
 		}
-		
-		$track_result['date'] = time();
-		$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
-		if (!is_array($ximalaya_sync_log)) $ximalaya_sync_log = array();
-		array_push($ximalaya_sync_log, $track_result);
-		update_post_meta( $post_ID, '_ximalaya_sync_log', $ximalaya_sync_log );
+		$this->log($post_ID, !!$track_result['redirect_to'], $track_result);
 	}
 
 	private function get_login_token() {
@@ -248,7 +242,7 @@ DX63+Ecil2JR9klVawIDAQAB
 		return json_decode($this->dom->outerHtml, true);
 	}
 
-	public function error($ret, $msg) {
+	private function error($ret, $msg) {
 		switch ($ret) {
 			case 50:
 				$token = $this->get_login_token();
@@ -263,20 +257,31 @@ DX63+Ecil2JR9klVawIDAQAB
 		}
 	}
 
-	public function get_cookie_file() {
+	private function log($post_ID, $success = false, $log_obj = array()) {
+		if (!is_array($log_obj)) $log_obj = array();
+		$log_obj['success'] = $success ? 1 : 0;
+		$log_obj['date'] = time();
+		$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
+		if (!is_array($ximalaya_sync_log)) $ximalaya_sync_log = array();
+		array_push($ximalaya_sync_log, $log_obj);
+		update_post_meta( $post_ID, '_ximalaya_sync_log', $ximalaya_sync_log );
+		return $ximalaya_sync_log;
+	}
+
+	private function get_cookie_file() {
 		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$this->cookie_file = $options['ximalaya']['cookie_file'];
 		if (!$this->cookie_file || !file_exists($this->cookie_file)) $this->create_cookie_file();
 		return $this->cookie_file;
 	}
-	public function create_cookie_file() {
+	private function create_cookie_file() {
 		$this->cookie_file = tempnam('./tmp','cookie');
 		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$options['ximalaya']['cookie_file'] = $this->cookie_file;
 		update_option( ASYNC_PLUGIN_OPTIONNAME, $options );
 		return $this->cookie_file;
 	}
-	public function getCookieFromFile($cookie_file) {
+	private function getCookieFromFile($cookie_file) {
 		$lines = file($cookie_file);
 		$cookies = array();
 		foreach($lines as $line) {

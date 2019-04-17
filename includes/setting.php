@@ -195,11 +195,11 @@ class setting {
 			$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
 			$icon_titles = array();
 			if (is_array($ximalaya_sync_log) && count($ximalaya_sync_log) > 0) {
-				$is_sync_successful = $ximalaya_sync_log[count($ximalaya_sync_log)-1]['ret'] != 1;
+				$is_sync_successful = !!$ximalaya_sync_log[ count($ximalaya_sync_log)-1 ]['success'];
 				if (!$is_sync_successful) $icon_bg_position = 'background-position:24px 0;';
 				for ($i=count($ximalaya_sync_log)-1; $i >= 0; $i--) { 
 					if (count($ximalaya_sync_log) - $i >= 5) {array_push($icon_titles, '...'); break;}
-					$is_sync_successful = !(array_key_exists('errcode', $ximalaya_sync_log[$i]) && $ximalaya_sync_log[$i]['ret'] != 1);
+					$is_sync_successful = !!$ximalaya_sync_log[$i]['success'];
 					array_push($icon_titles, date('Y-m-d H:i:s', $ximalaya_sync_log[$i]['date']) . ': ' . ($is_sync_successful ? __('Sync Successfully!', 'Async') :  __('Sync Failed!', 'Async').$ximalaya_sync_log[$i]['ret'].'-'.$ximalaya_sync_log[$i]['msg']) );
 				}
 			}
