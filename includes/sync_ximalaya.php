@@ -9,6 +9,7 @@ class sync_ximalaya implements sync {
 	public $dom;
 	public $uid;
 	public $userinfo;
+	public $post_ID;
 	private $phone;
 	private $password;
 	private $public_key =
@@ -27,6 +28,7 @@ DX63+Ecil2JR9klVawIDAQAB
 	}
 
 	public function sync($post_ID, $post, $medias = array()) {
+		$this->post_ID = $post_ID;
 		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$this->userinfo = $this->get_user_info();
 		if (!$this->userinfo) {
@@ -249,12 +251,11 @@ DX63+Ecil2JR9klVawIDAQAB
 				$password_encrypted = $this->encrypt_password($this->password, $token);
 				$this->uid = $this->login($password_encrypted);
 				break;
-			
 			default:
 				echo $msg;
-				exit;
 				break;
 		}
+		$this->log($this->post_ID, false, array('ret'=>$ret, 'msg'=>$msg));
 	}
 
 	private function log($post_ID, $success = false, $log_obj = array()) {
