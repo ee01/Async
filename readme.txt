@@ -1,10 +1,10 @@
 === A Synchronization ===
 Contributors: e5201
 Donate link: https://it.eexx.me/
-Tags: sync, connect, ximalaya
+Tags: sync, connect, distribute, ximalaya, wechat
 Requires at least: 4.6
 Tested up to: 5.0
-Stable tag: 1.0
+Stable tag: 1.1
 Requires PHP: 5.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -13,6 +13,10 @@ Synchronize articles or audios to other platforms.
 Such as Ximalaya, WeChat OA(need other plugins) etc.
 
 == Description ==
+
+A Synchronization is a wordpress plugin provide by Esone.
+- WordPress Plugin Page: https://wordpress.org/plugins/a-synchronization
+- GitHub: https://github.com/ee01/Async
 
 Synchronize articles or audios to other platforms.
 
