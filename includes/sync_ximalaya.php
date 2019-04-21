@@ -289,6 +289,7 @@ DX63+Ecil2JR9klVawIDAQAB
 				break;
 		}
 		$this->log($this->post_ID, false, array('ret'=>$ret, 'msg'=>$msg));
+		exit;
 	}
 
 	private function log($post_ID, $success = false, $log_obj = array()) {
