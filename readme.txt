@@ -4,7 +4,7 @@ Donate link: https://it.eexx.me/
 Tags: sync, connect, distribute, ximalaya, wechat
 Requires at least: 4.6
 Tested up to: 5.0
-Stable tag: 1.1
+Stable tag: 1.2
 Requires PHP: 5.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -44,8 +44,11 @@ Yes. Please install via git clone to the plugin folder above instead of uploadin
 
 == Changelog ==
 
-= 1.1 =
+= 1.3 =
 * Support delete Ximalaya when post deleted
+
+= 1.2 =
+* Validate account via SMS Code in the setting page
 
 = 1.0 =
 * Support sync audio of posts to Ximalaya

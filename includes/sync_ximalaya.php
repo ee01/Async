@@ -31,11 +31,7 @@ DX63+Ecil2JR9klVawIDAQAB
 		$this->post_ID = $post_ID;
 		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
 		$this->userinfo = $this->get_user_info();
-		if (!$this->userinfo) {
-			$token = $this->get_login_token();
-			$password_encrypted = $this->encrypt_password($this->password, $token);
-			$this->uid = $this->login($password_encrypted);
-		}
+		if (!$this->userinfo) $this->login();
 		if (!$this->uid) $this->uid = $this->userinfo['uid'];
 		foreach ($medias as $media) {
 			$ximalaya_track_id = get_post_meta( $post_ID, '_ximalaya_track_id', true );
@@ -56,18 +52,34 @@ DX63+Ecil2JR9klVawIDAQAB
 		$this->log($post_ID, !!$track_result['redirect_to'], $track_result);
 	}
 
+	public function get_user_info() {
+		$this->dom->load('http://studio.ximalaya.com/api/home/userInfo', [
+			'curl' => [
+				CURLOPT_REFERER => 'http://studio.ximalaya.com/',
+				CURLOPT_COOKIEFILE => $this->cookie_file,
+			]
+		]);
+		$userinfo = json_decode($this->dom->outerHtml, true);
+		if ($userinfo == null || $userinfo['code'] != 0) return false;
+		return $userinfo['data'];
+	}
+
+	public function login() {
+		$token = $this->get_login_token();
+		$password_encrypted = $this->encrypt_password($this->password, $token);
+		$login_result = $this->do_login($password_encrypted);
+		return $login_result;
+	}
 	private function get_login_token() {
 		$this->dom->load('https://www.ximalaya.com/passport/token/login');
 		$tokenResponse = json_decode($this->dom->outerHtml, true);
 		return $tokenResponse['token'];
 	}
-
 	private function encrypt_password($password, $token) {
 		openssl_public_encrypt(md5($password).$token, $password_encrypted, $this->public_key);
 		return $password_encrypted = base64_encode($password_encrypted);
 	}
-
-	private function login($password_encrypted, $rememberMe = 'true') {
+	private function do_login($password_encrypted, $rememberMe = 'true') {
 		$this->dom->load('https://www.ximalaya.com/passport/v4/security/popupLogin', [
 			'curl' => [
 				CURLOPT_POST => 1,
@@ -84,20 +96,46 @@ DX63+Ecil2JR9klVawIDAQAB
 			]
 		]);
 		$login_result = json_decode($this->dom->outerHtml, true);
+		if (array_key_exists('gotoValidateMobile', $login_result)) $this->error(51, __('Need mobile validation! Please go to setting page to validate your account.', 'Async'));
 		if ($login_result['ret'] != 0) $this->error($login_result['ret'], $login_result['errorMsg']);
-		return $login_result['uid'];
+		$this->uid = $login_result['uid'];
+		return $login_result;
 	}
 
-	private function get_user_info() {
-		$this->dom->load('http://studio.ximalaya.com/api/home/userInfo', [
+	public function get_smscode($mobile) {
+		$token = $this->get_login_token();
+		$this->dom->load('https://www.ximalaya.com/passport/v1/sms/send', [
 			'curl' => [
-				CURLOPT_REFERER => 'http://studio.ximalaya.com/',
+				CURLOPT_POST => 1,
 				CURLOPT_COOKIEFILE => $this->cookie_file,
+				CURLOPT_REFERER => 'https://www.ximalaya.com/passport/login',
+				CURLOPT_POSTFIELDS => [
+					'phone_num' => $mobile,
+					'nonce' => $token,
+					'sendType' => 1,
+					'msgType' => 32,
+				]
 			]
 		]);
-		$userinfo = json_decode($this->dom->outerHtml, true);
-		if ($userinfo == null || $userinfo['code'] != 0) return false;
-		return $userinfo['data'];
+		return json_decode($this->dom->outerHtml, true);
+	}
+
+	public function validate_smscode($mobile, $smsCode, $checkKey) {
+		$token = $this->get_login_token();
+		$this->dom->load('https://www.ximalaya.com/passport/v1/phone/validate', [
+			'curl' => [
+				CURLOPT_POST => 1,
+				CURLOPT_COOKIEFILE => $this->cookie_file,
+				CURLOPT_REFERER => 'https://www.ximalaya.com/passport/login',
+				CURLOPT_POSTFIELDS => [
+					'phone_num' => $mobile,
+					'nonce' => $token,
+					'smsCode' => $smsCode,
+					'checkKey' => $checkKey,
+				]
+			]
+		]);
+		return json_decode($this->dom->outerHtml, true);
 	}
 
 	private function upload($file_path) {
@@ -115,7 +153,6 @@ DX63+Ecil2JR9klVawIDAQAB
 		}
 		return $file_result = $this->get_upload_file_url($file_ctxs, filesize($file_path), $file_ctx['serverIp'], $authorization);
 	}
-
 	private function get_upload_authorization($file_name, $file_size) {
 		$this->dom->load('http://upload.ximalaya.com/clamper-token/token', [
 			'curl' => [
@@ -134,7 +171,6 @@ DX63+Ecil2JR9klVawIDAQAB
 		if ($authorization['ret'] != 0) $this->error($authorization['ret'], $authorization['msg']);
 		return $authorization['token'];
 	}
-
 	private function upload_file_pieces($file_path, $authorization, $file_offset = -1, $server_ip = null) {
 		$file_size = filesize($file_path);
 		$fp = fopen($file_path, "rb");
@@ -153,7 +189,6 @@ DX63+Ecil2JR9klVawIDAQAB
 		]);
 		return json_decode($this->dom->outerHtml, true);
 	}
-
 	private function get_upload_file_url($file_ctxs, $filesize, $server_ip, $authorization) {
 		$this->dom->load('http://upload.ximalaya.com/clamper-server/mkfile/' . $filesize . '/ext/mp3', [
 			'curl' => [
@@ -247,12 +282,10 @@ DX63+Ecil2JR9klVawIDAQAB
 	private function error($ret, $msg) {
 		switch ($ret) {
 			case 50:
-				$token = $this->get_login_token();
-				$password_encrypted = $this->encrypt_password($this->password, $token);
-				$this->uid = $this->login($password_encrypted);
+				$this->login();
 				break;
 			default:
-				echo $msg;
+				// echo $msg;
 				break;
 		}
 		$this->log($this->post_ID, false, array('ret'=>$ret, 'msg'=>$msg));

@@ -16,22 +16,22 @@ class postsync {
 		if ($_POST['ximalaya_sync'] == 'on' || ($options['xmlrpc_sync_ximalaya'] && defined('XMLRPC_REQUEST')) ) {
 			$ximalaya = new sync_ximalaya($options['ximalaya']['phone'], $options['ximalaya']['password']);
 			$medias = $this->get_medias('mp3|wma|wav', $post->post_content, $post_ID);
-			$ximalaya->sync($post_ID, $post, $medias);
+			if (count($medias) > 0) $ximalaya->sync($post_ID, $post, $medias);
 		}
 	}
 
 	public function action_after_delete_post($post_ID) {
-		$options = get_option( ASYNC_PLUGIN_OPTIONNAME );
-		if (!$options['appid'] || !$options['appsecret']) return false;
-		require_once ASYNC_PLUGIN_DIR . 'includes/officialAccount.php';
-		$app = new Awechat_oa(array(
-			'app_id' => $options['appid'],
-			'secret' => $options['appsecret']
-		));
-		$wechat_article_id = get_post_meta( $post_ID, '_wechat_article_id', true );
-		if ($wechat_article_id) {
-			$app->material->delete($wechat_article_id);
-		}
+		// $options = get_option( ASYNC_PLUGIN_OPTIONNAME );
+		// if (!$options['appid'] || !$options['appsecret']) return false;
+		// require_once ASYNC_PLUGIN_DIR . 'includes/officialAccount.php';
+		// $app = new Awechat_oa(array(
+		// 	'app_id' => $options['appid'],
+		// 	'secret' => $options['appsecret']
+		// ));
+		// $wechat_article_id = get_post_meta( $post_ID, '_wechat_article_id', true );
+		// if ($wechat_article_id) {
+		// 	$app->material->delete($wechat_article_id);
+		// }
 	}
 
 	private function get_medias($types, $content, $post_ID = null) {

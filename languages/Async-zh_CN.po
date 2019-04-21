@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: A Synchronization\n"
-"POT-Creation-Date: 2019-04-16 16:52+0800\n"
-"PO-Revision-Date: 2019-04-16 16:52+0800\n"
+"POT-Creation-Date: 2019-04-21 23:34+0800\n"
+"PO-Revision-Date: 2019-04-21 23:40+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -32,101 +32,141 @@ msgstr "确定删除现有配置并重置为默认值？"
 msgid "Reset Successfully!"
 msgstr "重置成功"
 
-#: includes/setting.php:36 includes/setting.php:37
+#: includes/setting.php:38 includes/setting.php:39
 msgid "Async Settings"
 msgstr "一键同步"
 
+#: includes/setting.php:61
+msgid "Login Successfully!"
+msgstr "登录成功！"
+
+#: includes/setting.php:62
+msgid "Send SMS Code"
+msgstr "发送验证码"
+
+#: includes/setting.php:63
+msgid "SMS Code is correct!"
+msgstr "验证码认证成功！"
+
 #. Plugin Name of the plugin/theme
-#: includes/setting.php:58
+#: includes/setting.php:67
 msgid "A Synchronization"
 msgstr "A Synchronization (一键同步)"
 
-#: includes/setting.php:62
+#: includes/setting.php:72
 msgid "Ximalaya Account Settings"
 msgstr "喜马拉雅账号配置"
 
-#: includes/setting.php:65
+#: includes/setting.php:75
 msgid "Phone"
 msgstr "注册手机号"
 
-#: includes/setting.php:73
+#: includes/setting.php:83
 msgid "Register podcaster on Ximalaya: "
 msgstr "立即注册为喜马拉雅的主播："
 
-#: includes/setting.php:78
+#: includes/setting.php:88
 msgid "Password"
 msgstr "登录密码"
 
-#: includes/setting.php:88
+#: includes/setting.php:96
+msgid "If you are stuck on posting, please validate your account: "
+msgstr "如果你无法正常同步，请先验证你的账号："
+
+#: includes/setting.php:96
+msgid "Click to Validate"
+msgstr "点击认证"
+
+#: includes/setting.php:101
 msgid "Album ID"
 msgstr "专辑ID"
 
-#: includes/setting.php:96
+#: includes/setting.php:109
 msgid "Upload post audio to this album."
 msgstr "将会上传文章的音频到这个专辑。"
 
-#: includes/setting.php:101
+#: includes/setting.php:114
 msgid "Enable sync from XML-RPC"
 msgstr "开启XML-RPC同步喜马拉雅"
 
-#: includes/setting.php:109
+#: includes/setting.php:122
 msgid ""
 "Sync up to Ximalaya automatically when using destop app to write article."
 msgstr "当使用客户端写博客的时候，自动同步音频到喜马拉雅。"
 
-#: includes/setting.php:114
+#: includes/setting.php:129
+msgid "Wechat Account Settings"
+msgstr "微信公众账号设置"
+
+#: includes/setting.php:130
+msgid "Please go to A Wechat Setting page: "
+msgstr "请移步 微信公众号 插件设置页面："
+
+#: includes/setting.php:130
+msgid "WeChat Settings"
+msgstr ""
+
+#: includes/setting.php:133
 msgid "Sync Up Settings"
 msgstr "文章同步"
 
-#: includes/setting.php:117
+#: includes/setting.php:136
 msgid "Title Prefix"
 msgstr "标题前缀"
 
-#: includes/setting.php:125
+#: includes/setting.php:144
 msgid "Add to synchronized article title automatically."
 msgstr "自动添加前缀到喜马拉雅音频标题"
 
-#: includes/setting.php:132
+#: includes/setting.php:151
 msgid "Default Cover"
 msgstr "默认封面图"
 
-#: includes/setting.php:143
+#: includes/setting.php:162
 msgid "Upload"
 msgstr "上传"
 
-#: includes/setting.php:146
+#: includes/setting.php:165
 msgid "Delete"
 msgstr "删除"
 
-#: includes/setting.php:161
+#: includes/setting.php:179
+msgid "SMS Code"
+msgstr "短信验证码"
+
+#: includes/setting.php:182
+msgid "Send"
+msgstr "发送"
+
+#: includes/setting.php:231
 msgid "A Sync"
 msgstr "一键同步"
 
-#: includes/setting.php:166
+#: includes/setting.php:236
 msgid "Ximalaya Sync"
 msgstr "喜马拉雅"
 
-#: includes/setting.php:169
+#: includes/setting.php:239
 msgid "Sync Ximalaya"
 msgstr "同步音频到喜马拉雅"
 
-#: includes/setting.php:170
+#: includes/setting.php:240
 msgid "Help"
 msgstr "帮助"
 
-#: includes/setting.php:174
+#: includes/setting.php:244
 msgid "Wechat OA Sync"
 msgstr "微信公众号"
 
-#: includes/setting.php:182
+#: includes/setting.php:252
 msgid "Sync"
 msgstr "同步到"
 
-#: includes/setting.php:204
+#: includes/setting.php:274
 msgid "Sync Successfully!"
 msgstr "同步成功！"
 
-#: includes/setting.php:204
+#: includes/setting.php:274
 msgid "Sync Failed!"
 msgstr "同步失败！"
 
