@@ -306,8 +306,10 @@ echo 'msg: '.$log_obj['msg']."\n";
 echo 'errors: ';print_r($log_obj['errors']);echo "\n";
 		$log_obj['success'] = $success ? 1 : 0;
 		$log_obj['date'] = time();
-		$log_obj['error'] = $log_obj['error'] || $log_obj['ret'] || $log_obj['res'];
-		$log_obj['msg'] = $log_obj['msg'] || json_encode($log_obj);
+		$log_obj['error'] = array_key_exists('error', $log_obj) ? $log_obj['error']
+			: array_key_exists('ret', $log_obj) ? $log_obj['ret']
+			: $log_obj['res'];
+		$log_obj['msg'] = array_key_exists('msg',$log_obj)?$log_obj['msg'] : (array_key_exists('errors', $log_obj) ? json_encode($log_obj['errors']) : json_encode($log_obj) );
 		$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
 		if (!is_array($ximalaya_sync_log)) $ximalaya_sync_log = array();
 		array_push($ximalaya_sync_log, $log_obj);
