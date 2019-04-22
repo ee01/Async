@@ -301,6 +301,8 @@ exit;
 		if (!is_array($log_obj)) $log_obj = array();
 		$log_obj['success'] = $success ? 1 : 0;
 		$log_obj['date'] = time();
+		$log_obj['error'] = $log_obj['error'] || $log_obj['ret'] || $log_obj['res'];
+		$log_obj['msg'] = $log_obj['msg'] || (array_key_exists('errors', $log_obj) ? join('',join(',',$log_obj['errors'])) : json_encode($log_obj) );
 		$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
 		if (!is_array($ximalaya_sync_log)) $ximalaya_sync_log = array();
 		array_push($ximalaya_sync_log, $log_obj);

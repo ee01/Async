@@ -271,7 +271,7 @@ class setting {
 				for ($i=count($ximalaya_sync_log)-1; $i >= 0; $i--) { 
 					if (count($ximalaya_sync_log) - $i >= 5) {array_push($icon_titles, '...'); break;}
 					$is_sync_successful = !!$ximalaya_sync_log[$i]['success'];
-					array_push($icon_titles, date('Y-m-d H:i:s', $ximalaya_sync_log[$i]['date']) . ': ' . ($is_sync_successful ? __('Sync Successfully!', 'Async') :  __('Sync Failed!', 'Async').$ximalaya_sync_log[$i]['ret'].'-'.$ximalaya_sync_log[$i]['msg']) );
+					array_push($icon_titles, date('Y-m-d H:i:s', $ximalaya_sync_log[$i]['date']) . ': ' . ($is_sync_successful ? __('Sync Successfully!', 'Async') :  __('Sync Failed!', 'Async').$ximalaya_sync_log[$i]['error'].'-'.$ximalaya_sync_log[$i]['msg']) );
 				}
 			}
 			if (!$ximalaya_article_id) $icon_bg_position .= 'filter:grayscale(100%);';
