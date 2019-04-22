@@ -33,6 +33,8 @@ DX63+Ecil2JR9klVawIDAQAB
 		$this->userinfo = $this->get_user_info();
 		if (!$this->userinfo) $this->login();
 		if (!$this->uid) $this->uid = $this->userinfo['uid'];
+print_r($medias);
+print_r($this->userinfo);
 		foreach ($medias as $media) {
 			$ximalaya_track_id = get_post_meta( $post_ID, '_ximalaya_track_id', true );
 			if ($ximalaya_track_id) $ximalaya_track = $this->get_track_info($ximalaya_track_id, $options['ximalaya']['album_id']);
@@ -41,15 +43,18 @@ DX63+Ecil2JR9klVawIDAQAB
 				$track_result = $this->update_track($options['ximalaya']['album_id'], $ximalaya_track_id, $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content, get_the_author_meta('display_name', $post->post_author));
 			} else {
 				$file_result = $this->upload($media['path']);
+print_r($file_result);
 				$track_result = $this->create_track($options['ximalaya']['album_id'], $file_result['callbackData']['fileId'], $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content);
 				if ($track_result && $track_result['redirect_to']) {
 					$track_id = $this->get_track_id_by_title($options['title_prefix'].$post->post_title);
 					if ($track_id) update_post_meta( $post_ID, '_ximalaya_track_id', $track_id );
 				}
+print_r($track_result);
 			}
 			break;	// support 1 audio per post
 		}
 		$this->log($post_ID, !!$track_result['redirect_to'], $track_result);
+exit;
 	}
 
 	public function get_user_info() {
@@ -299,6 +304,7 @@ DX63+Ecil2JR9klVawIDAQAB
 		$ximalaya_sync_log = get_post_meta( $post_ID, '_ximalaya_sync_log', true );
 		if (!is_array($ximalaya_sync_log)) $ximalaya_sync_log = array();
 		array_push($ximalaya_sync_log, $log_obj);
+print_r($log_obj);
 		update_post_meta( $post_ID, '_ximalaya_sync_log', $ximalaya_sync_log );
 		return $ximalaya_sync_log;
 	}
