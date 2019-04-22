@@ -299,6 +299,11 @@ exit;
 
 	private function log($post_ID, $success = false, $log_obj = array()) {
 		if (!is_array($log_obj)) $log_obj = array();
+echo 'error: '.$log_obj['error']."\n";
+echo 'ret: '.$log_obj['ret']."\n";
+echo 'res: '.$log_obj['res']."\n";
+echo 'msg: '.$log_obj['msg']."\n";
+echo 'errors: ';print_r($log_obj['errors']);echo "\n";
 		$log_obj['success'] = $success ? 1 : 0;
 		$log_obj['date'] = time();
 		$log_obj['error'] = $log_obj['error'] || $log_obj['ret'] || $log_obj['res'];
