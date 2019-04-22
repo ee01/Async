@@ -275,7 +275,7 @@ class setting {
 				}
 			}
 			if (!$ximalaya_article_id) $icon_bg_position .= 'filter:grayscale(100%);';
-			echo '<a href="' . $ximalaya_article_url . '" title="' . join("\n",$icon_titles) . '" style="display:inline-block;margin:10px 5px;width:24px;height:25px;background-size:48px 25px;background-image:url(' . ASYNC_PLUGIN_URL.'/assets/ximalaya_icon.png' . ');' . $icon_bg_position . '" target="_blank" /></a>';
+			echo '<a href="' . $ximalaya_article_url . '" title=\'' . join("\n",$icon_titles) . '\' style="display:inline-block;margin:10px 5px;width:24px;height:25px;background-size:48px 25px;background-image:url(' . ASYNC_PLUGIN_URL.'/assets/ximalaya_icon.png' . ');' . $icon_bg_position . '" target="_blank" /></a>';
 		}
 	}
 }
