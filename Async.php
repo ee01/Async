@@ -4,7 +4,7 @@ Plugin Name: A Synchronization
 Plugin URI: http://IT.eexx.me/
 Description: Synchronize articles or audios to other platforms.
 Author: Esone
-Version: 1.2
+Version: 1.2.1
 Author URI: http://IT.eexx.me
 */
 namespace Async;

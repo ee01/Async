@@ -34,16 +34,17 @@ DX63+Ecil2JR9klVawIDAQAB
 		if (!$this->userinfo) $this->login();
 		if (!$this->uid) $this->uid = $this->userinfo['uid'];
 		foreach ($medias as $media) {
+			$title = preg_replace("/[\x21-\x7e]+$/", '', $options['title_prefix'].$post->post_title);
 			$ximalaya_track_id = get_post_meta( $post_ID, '_ximalaya_track_id', true );
 			if ($ximalaya_track_id) $ximalaya_track = $this->get_track_info($ximalaya_track_id, $options['ximalaya']['album_id']);
 			$is_update_existed_material = $ximalaya_track_id && $ximalaya_track['ret'] == 200;
 			if ($is_update_existed_material) {
-				$track_result = $this->update_track($options['ximalaya']['album_id'], $ximalaya_track_id, $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content, get_the_author_meta('display_name', $post->post_author));
+				$track_result = $this->update_track($options['ximalaya']['album_id'], $ximalaya_track_id, $title, $post->post_excerpt, $post->post_content, get_the_author_meta('display_name', $post->post_author));
 			} else {
 				$file_result = $this->upload($media['path']);
-				$track_result = $this->create_track($options['ximalaya']['album_id'], $file_result['callbackData']['fileId'], $options['title_prefix'].$post->post_title, $post->post_excerpt, $post->post_content);
+				$track_result = $this->create_track($options['ximalaya']['album_id'], $file_result['callbackData']['fileId'], $title, $post->post_excerpt, $post->post_content);
 				if ($track_result && $track_result['redirect_to']) {
-					$track_id = $this->get_track_id_by_title($options['title_prefix'].$post->post_title);
+					$track_id = $this->get_track_id_by_title($title);
 					if ($track_id) update_post_meta( $post_ID, '_ximalaya_track_id', $track_id );
 				}
 			}
