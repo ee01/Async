@@ -22,7 +22,7 @@ Synchronize articles or audios to other platforms.
 
 Now we support:
 * Ximalaya
-* WeChat OA(need other plugins)
+* WeChat OA(need other plugins: https://wordpress.org/plugins/a-wechat/)
 
 == Installation ==
 
